@@ -6,8 +6,8 @@ public class MatrixAddition {
         System.out.print("Enter the number of rows and columns for both the matrix(rows, columns):");
         int row = sc.nextInt();
         int clmn= sc.nextInt();
-        int[][] Mat = new int[row][clmn];
-        int[][] Mat1 = new int[row][clmn];
+        int[][] Matrix = new int[row][clmn];
+        int[][] MatrixB = new int[row][clmn];
         System.out.println("\nEnter the elements to the first matrix:");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < clmn; j++) {
