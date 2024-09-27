@@ -1,58 +1,69 @@
 package Labwork;
 import java.util.*;
 
-class BankAccount{
-	 private int accNo;
-	    private String accType;
-	    private String accHolder;
-	    private long balance;
+class InvalidAmountException extends Exception {
+    public InvalidAmountException(String message) {
+        super(message);
+    }
+}
 
-	    public BankAccount(int accNo, String accType, String accHolder, long balance) {
-	        this.accNo = accNo;
-	        this.accType = accType;
-	        this.accHolder = accHolder;
-	        this.balance = balance;
-	    }
-	    public int getAccNo() {
-	        return accNo;
-	    }
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
+}
 
-	    public void deposit(long amt) {
-	        if (amt > 0) {
-	            balance += amt;
-	            System.out.println("Deposit successful! New balance: " + balance);
-	        } else {
-	            System.out.println("Invalid amount; must be greater than 0.");
-	        }
-	    }
+class BankAccount {
+    private int accNo;
+    private String accType;
+    private String accHolder;
+    private long balance;
 
-	    public void withdraw(long amt) {
-	        if (amt > balance) {
-	            System.out.println("Insufficient balance for withdrawal.");
-	        } else if (amt > 0) {
-	            balance -= amt;
-	            System.out.println("Withdrawal successful! New balance: " + balance);
-	        } else {
-	            System.out.println("Invalid amount; must be greater than 0.");
-	        }
-	    }
+    public BankAccount(int accNo, String accType, String accHolder, long balance) {
+        this.accNo = accNo;
+        this.accType = accType;
+        this.accHolder = accHolder;
+        this.balance = balance;
+    }
 
-	    public void displayDetails() {
-	        System.out.println("Name of Account Holder: " + accHolder);
-	        System.out.println("Account No.: " + accNo);
-	        System.out.println("Account Type: " + accType);
-	        System.out.println("Balance: " + balance);
-	    }
-	    
+    public int getAccNo() {
+        return accNo;
+    }
+
+    public void deposit(long amt) throws InvalidAmountException {
+        if (amt <= 0) {
+            throw new InvalidAmountException("Invalid amount; must be greater than 0.");
+        }
+        balance += amt;
+        System.out.println("Deposit successful! New balance: " + balance);
+    }
+
+    public void withdraw(long amt) throws InvalidAmountException, InsufficientFundsException {
+        if (amt <= 0) {
+            throw new InvalidAmountException("Invalid amount; must be greater than 0.");
+        }
+        if (amt > balance) {
+            throw new InsufficientFundsException("Insufficient balance for withdrawal.");
+        }
+        balance -= amt;
+        System.out.println("Withdrawal successful! New balance: " + balance);
+    }
+
+    public void displayDetails() {
+        System.out.println("Name of Account Holder: " + accHolder);
+        System.out.println("Account No.: " + accNo);
+        System.out.println("Account Type: " + accType);
+        System.out.println("Balance: " + balance);
+    }
 }
 
 public class CustomException {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner (System.in);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         BankAccount acc = null;
-		
-		while(true) {
+
+        while (true) {
             System.out.println("\n*** Banking System Application ***");
             System.out.println("1. Open New Account");
             System.out.println("2. Display Account Details");
@@ -87,9 +98,13 @@ public class CustomException {
 
                 case 3:
                     if (acc != null) {
-                        System.out.print("Enter amount to deposit: ");
-                        long depAmt = sc.nextLong();
-                        acc.deposit(depAmt);
+                        try {
+                            System.out.print("Enter amount to deposit: ");
+                            long depAmt = sc.nextLong();
+                            acc.deposit(depAmt);
+                        } catch (InvalidAmountException e) {
+                            System.out.println(e.getMessage());
+                        }
                     } else {
                         System.out.println("No account found. Please create an account first.");
                     }
@@ -97,9 +112,13 @@ public class CustomException {
 
                 case 4:
                     if (acc != null) {
-                        System.out.print("Enter amount to withdraw: ");
-                        long withAmt = sc.nextLong();
-                        acc.withdraw(withAmt);
+                        try {
+                            System.out.print("Enter amount to withdraw: ");
+                            long withAmt = sc.nextLong();
+                            acc.withdraw(withAmt);
+                        } catch (InvalidAmountException | InsufficientFundsException e) {
+                            System.out.println(e.getMessage());
+                        }
                     } else {
                         System.out.println("No account found. Please create an account first.");
                     }
@@ -130,4 +149,3 @@ public class CustomException {
         }
     }
 }
-		
