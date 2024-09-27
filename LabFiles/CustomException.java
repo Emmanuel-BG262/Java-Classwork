@@ -98,12 +98,17 @@ public class CustomException {
 
                 case 3:
                     if (acc != null) {
-                        try {
-                            System.out.print("Enter amount to deposit: ");
-                            long depAmt = sc.nextLong();
-                            acc.deposit(depAmt);
-                        } catch (InvalidAmountException e) {
-                            System.out.println(e.getMessage());
+                        System.out.print("Enter amount to deposit: ");
+                        long depAmt = sc.nextLong();
+
+                        if (depAmt <= 0) {
+                            System.out.println("Invalid amount; must be greater than 0.");
+                        } else {
+                            try {
+                                acc.deposit(depAmt);
+                            } catch (InvalidAmountException e) {
+                                System.out.println(e.getMessage());
+                            }
                         }
                     } else {
                         System.out.println("No account found. Please create an account first.");
@@ -112,11 +117,14 @@ public class CustomException {
 
                 case 4:
                     if (acc != null) {
+                        System.out.print("Enter amount to withdraw: ");
+                        long withAmt = sc.nextLong();
+
                         try {
-                            System.out.print("Enter amount to withdraw: ");
-                            long withAmt = sc.nextLong();
                             acc.withdraw(withAmt);
-                        } catch (InvalidAmountException | InsufficientFundsException e) {
+                        } catch (InvalidAmountException e) {
+                            System.out.println(e.getMessage()); 
+                        } catch (InsufficientFundsException e) {
                             System.out.println(e.getMessage());
                         }
                     } else {
